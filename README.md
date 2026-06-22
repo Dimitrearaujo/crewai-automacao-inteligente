@@ -1,5 +1,10 @@
 # CrewAI — Automacao Inteligente de Processos Corporativos
 
+[![CI](https://github.com/Dimitrearaujo/crewai-automacao-inteligente/actions/workflows/ci.yml/badge.svg)](https://github.com/Dimitrearaujo/crewai-automacao-inteligente/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![CrewAI](https://img.shields.io/badge/CrewAI-0.28%2B-orange)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
 Um **sistema multi-agente** que automatiza o ciclo completo de analise e implementacao de automacoes corporativas. Tres agentes especializados trabalham em equipe: Analista de Processos, Arquiteto de Automacao e Redator Tecnico.
 
 ## Quick Start
