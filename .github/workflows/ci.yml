@@ -38,7 +38,7 @@ jobs:
           files_keywords = {
               'tasks/analysis_task.py': ['gargalos', 'processo', 'automacao'],
               'tasks/architecture_task.py': ['stack', 'ROI', 'prazo'],
-              'tasks/documentation_task.py': ['Markdown', 'documentacao'],
+              'tasks/documentation_task.py': ['Markdown', 'documento'],
           }
 
           for filepath, keywords in files_keywords.items():
