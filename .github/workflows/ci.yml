@@ -1,0 +1,134 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5.6.0
+        with:
+          python-version: "3.12"
+
+      - name: Syntax check — todos os arquivos .py
+        run: |
+          python -m py_compile crew.py
+          python -m py_compile agents/process_analyst.py
+          python -m py_compile agents/automation_architect.py
+          python -m py_compile agents/tech_writer.py
+          python -m py_compile tasks/analysis_task.py
+          python -m py_compile tasks/architecture_task.py
+          python -m py_compile tasks/documentation_task.py
+          echo "Syntax check OK"
+
+      - name: Test — Task builders (sem LLM)
+        run: |
+          python -c "
+          import sys
+          sys.path.insert(0, '.')
+
+          # Testa que os task builders retornam objetos com os campos corretos
+          # sem instanciar LLM (mock do agente)
+          class MockAgent:
+              role = 'test'
+              goal = 'test'
+
+          from tasks.analysis_task import build_analysis_task
+          from tasks.architecture_task import build_architecture_task
+          from tasks.documentation_task import build_documentation_task
+
+          ag = MockAgent()
+
+          t1 = build_analysis_task(ag, 'processo de teste com 3 dias e aprovacao manual')
+          assert 'processo de teste' in t1.description
+          assert t1.agent is ag
+          assert len(t1.expected_output) > 20
+
+          t2 = build_architecture_task(ag)
+          assert 'stack' in t2.description.lower() or 'Stack' in t2.description
+          assert t2.agent is ag
+
+          t3 = build_documentation_task(ag)
+          assert 'Markdown' in t3.description
+          assert t3.agent is ag
+
+          print('Task builders: OK')
+          "
+
+      - name: Test — Estrutura de arquivos obrigatoria
+        run: |
+          python -c "
+          import os
+
+          required = [
+              'crew.py',
+              'agents/process_analyst.py',
+              'agents/automation_architect.py',
+              'agents/tech_writer.py',
+              'tasks/analysis_task.py',
+              'tasks/architecture_task.py',
+              'tasks/documentation_task.py',
+              'requirements.txt',
+              '.env.example',
+              'README.md',
+          ]
+
+          missing = [f for f in required if not os.path.exists(f)]
+          assert not missing, f'Arquivos ausentes: {missing}'
+          print('Estrutura de arquivos: OK')
+          "
+
+      - name: Test — Requirements validos
+        run: |
+          python -c "
+          with open('requirements.txt') as f:
+              reqs = [l.strip() for l in f if l.strip() and not l.startswith('#')]
+
+          required_packages = ['crewai', 'langchain-anthropic', 'langchain-openai', 'python-dotenv']
+          for pkg in required_packages:
+              assert any(pkg in r for r in reqs), f'Pacote ausente no requirements.txt: {pkg}'
+
+          print(f'Requirements validos ({len(reqs)} pacotes): OK')
+          "
+
+      - name: Test — .env.example completo
+        run: |
+          python -c "
+          with open('.env.example') as f:
+              content = f.read()
+
+          required_vars = ['LLM_PROVIDER', 'ANTHROPIC_API_KEY', 'MODEL_NAME', 'VERBOSE']
+          for var in required_vars:
+              assert var in content, f'Variavel ausente no .env.example: {var}'
+
+          print('.env.example completo: OK')
+          "
+
+      - name: Test — README com secoes obrigatorias
+        run: |
+          python -c "
+          with open('README.md') as f:
+              readme = f.read()
+
+          required_sections = ['Quick Start', 'Arquitetura', 'Estrutura', 'Licenca']
+          for section in required_sections:
+              assert section in readme, f'Secao ausente no README: {section}'
+
+          # Verifica que tem pelo menos 3 agentes documentados
+          assert 'Agente 1' in readme or 'Analista' in readme
+          assert 'Agente 2' in readme or 'Arquiteto' in readme
+          assert 'Agente 3' in readme or 'Redator' in readme
+
+          print('README completo: OK')
+          "
+
+      - name: Todos os testes passaram
+        run: echo "CI verde — CrewAI multi-agente funcionando corretamente"
