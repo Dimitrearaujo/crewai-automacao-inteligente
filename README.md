@@ -142,5 +142,154 @@ MIT — use livremente em producao.
 
 ---
 
+<details>
+<summary>🇺🇸 English</summary>
+
+# CrewAI — Intelligent Corporate Process Automation
+
+[![CI](https://github.com/Dimitrearaujo/crewai-automacao-inteligente/actions/workflows/ci.yml/badge.svg)](https://github.com/Dimitrearaujo/crewai-automacao-inteligente/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![CrewAI](https://img.shields.io/badge/CrewAI-0.28%2B-orange)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
+A **multi-agent system** that automates the full cycle of analyzing and implementing corporate automations. Three specialized agents work as a team: Process Analyst, Automation Architect and Technical Writer.
+
+## Quick Start
+
+```bash
+git clone https://github.com/Dimitrearaujo/crewai-automacao-inteligente.git
+cd crewai-automacao-inteligente
+pip install -r requirements.txt
+cp .env.example .env  # configure your API key
+python crew.py
+```
+
+## What you get
+
+- A crew of 3 AI agents with distinct roles and goals
+- Automatic process analysis and bottleneck identification
+- Automation plan generated with technologies, timeline and ROI
+- Complete technical documentation generated automatically
+- Result exported as structured Markdown
+- Compatible with Claude (Anthropic) and GPT-4o (OpenAI)
+
+## Architecture
+
+### The 3 Agents
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                        CREW                             │
+│                                                         │
+│  Agent 1: Process Analyst                                │
+│  - Understands the process described by the user        │
+│  - Identifies bottlenecks and inefficiencies             │
+│  - Produces a diagnosis report                           │
+│                  |                                      │
+│                  v                                      │
+│  Agent 2: Automation Architect                           │
+│  - Receives diagnosis from the Analyst                   │
+│  - Defines the tech stack (Python, n8n, APIs)            │
+│  - Estimates timeline, cost and ROI of implementation     │
+│                  |                                      │
+│                  v                                      │
+│  Agent 3: Technical Writer                               │
+│  - Receives the plan from the Architect                  │
+│  - Generates complete documentation in Markdown          │
+│  - Creates a step-by-step implementation guide            │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Stack
+
+- **CrewAI** — agent orchestration and sequential tasks
+- **Anthropic Claude / OpenAI GPT-4o** — base LLM (configurable)
+- **Python 3.10+** — runtime
+- **Pydantic** — structured output validation
+
+## Structure
+
+```
+crewai-automacao-inteligente/
+├── crew.py                   <- Main entry point
+├── agents/
+│   ├── process_analyst.py    <- Process analyst agent
+│   ├── automation_architect.py <- Automation architect agent
+│   └── tech_writer.py        <- Technical writer agent
+├── tasks/
+│   ├── analysis_task.py      <- Diagnosis task
+│   ├── architecture_task.py  <- Architecture task
+│   └── documentation_task.py <- Documentation task
+├── tools/
+│   └── process_tools.py      <- Tools shared between agents
+├── output/                   <- Generated results
+├── .env.example
+├── requirements.txt
+└── README.md
+```
+
+## Usage Example
+
+You describe the process:
+> "Our contract approval process involves 4 departments, uses email for communication and takes an average of 5 business days."
+
+The crew delivers:
+
+**Agent 1 — Diagnosis:**
+```
+Bottlenecks identified:
+- Email communication: no traceability, implicit SLA
+- 4 sequential departments: no parallel steps
+- Manual approval on 100% of contracts: no automatic rules
+Automation potential: HIGH
+```
+
+**Agent 2 — Automation Plan:**
+```
+Recommended stack:
+- n8n: approval flow orchestration
+- Internal REST API: integration with contract system
+- Python business rules: automatic approval for contracts under $2k
+- Notifications via WhatsApp Business API
+
+Estimate: 3 weeks | ROI: 340% in 12 months
+```
+
+**Agent 3 — Documentation:**
+- Complete .md file with flow, text diagram and implementation guide
+
+## Configuration
+
+```env
+# .env.example
+LLM_PROVIDER=anthropic
+ANTHROPIC_API_KEY=sk-ant-...
+OPENAI_API_KEY=sk-...
+MODEL_NAME=claude-sonnet-4-6
+VERBOSE=true
+OUTPUT_DIR=./output
+```
+
+## Use Cases
+
+- Automation of corporate approvals and workflows
+- Modernization of legacy processes (email -> API)
+- Automatic documentation of existing processes
+- Identification and prioritization of RPA opportunities
+
+## Requirements
+
+- Python 3.10+
+- Anthropic (Claude) or OpenAI API key
+- Internet connection to call the LLM API
+
+## License
+
+MIT — use freely in production.
+
+</details>
+
+---
+
 **Feito por [Dimitre Araujo](https://github.com/Dimitrearaujo) — CD Tech**
 Junho 2026 | v1.0
