@@ -1,18 +1,8 @@
 """Agente 3: Redator Tecnico — gera documentacao completa em Markdown."""
 
-import os
 from crewai import Agent
-from langchain_anthropic import ChatAnthropic
-from langchain_openai import ChatOpenAI
 
-
-def _get_llm():
-    if os.getenv("LLM_PROVIDER", "anthropic") == "anthropic":
-        return ChatAnthropic(
-            model=os.getenv("MODEL_NAME", "claude-sonnet-4-6"),
-            api_key=os.getenv("ANTHROPIC_API_KEY"),
-        )
-    return ChatOpenAI(model=os.getenv("MODEL_NAME", "gpt-4o"), api_key=os.getenv("OPENAI_API_KEY"))
+from agents._llm import get_model_name
 
 
 def build_writer() -> Agent:
@@ -28,7 +18,7 @@ def build_writer() -> Agent:
             "compreensíveis para times de negocio sem perder a precisao tecnica. "
             "Voce estrutura documentos com clareza: visao geral, detalhes, proximos passos."
         ),
-        llm=_get_llm(),
+        llm=get_model_name(),
         verbose=True,
         allow_delegation=False,
     )

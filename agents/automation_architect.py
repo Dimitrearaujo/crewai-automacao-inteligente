@@ -1,18 +1,8 @@
 """Agente 2: Arquiteto de Automacao — define stack e plano de implementacao."""
 
-import os
 from crewai import Agent
-from langchain_anthropic import ChatAnthropic
-from langchain_openai import ChatOpenAI
 
-
-def _get_llm():
-    if os.getenv("LLM_PROVIDER", "anthropic") == "anthropic":
-        return ChatAnthropic(
-            model=os.getenv("MODEL_NAME", "claude-sonnet-4-6"),
-            api_key=os.getenv("ANTHROPIC_API_KEY"),
-        )
-    return ChatOpenAI(model=os.getenv("MODEL_NAME", "gpt-4o"), api_key=os.getenv("OPENAI_API_KEY"))
+from agents._llm import get_model_name
 
 
 def build_architect() -> Agent:
@@ -29,7 +19,7 @@ def build_architect() -> Agent:
             "Voce pensa sempre em solucoes praticas, escaláveis e com retorno rapido — "
             "nada de overengineering. Seu foco e implementar o que gera valor em semanas, nao meses."
         ),
-        llm=_get_llm(),
+        llm=get_model_name(),
         verbose=True,
         allow_delegation=False,
     )
